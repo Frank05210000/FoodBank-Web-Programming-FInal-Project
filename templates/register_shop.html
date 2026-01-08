@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h3 class="mb-4 text-center">{{ trans('register_shop_title') }}</h3>
+                <form method="POST">
+                    <h5 class="fw-bold mb-3">{{ trans('section_owner_info') }}</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_name') }}</label>
+                            <input type="text" class="form-control" name="name" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_phone') }}</label>
+                            <input type="text" class="form-control" name="phone" pattern="09\d{8}" maxlength="10" placeholder="09xxxxxxxx">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('field_email') }}</label>
+                        <input type="email" class="form-control" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('field_password') }}</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+
+                    <hr>
+                    <h5 class="fw-bold mb-3">{{ trans('section_shop_info') }}</h5>
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('field_shop_name') }}</label>
+                        <input type="text" class="form-control" name="shop_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ trans('field_address') }}</label>
+                        <input type="text" class="form-control" name="address">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_opening_time') }}</label>
+                            <input type="time" class="form-control" name="opening_time">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_closing_time') }}</label>
+                            <input type="time" class="form-control" name="closing_time">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_latitude') }}</label>
+                            <input type="number" step="any" class="form-control" name="latitude" placeholder="25.033">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">{{ trans('field_longitude') }}</label>
+                            <input type="number" step="any" class="form-control" name="longitude" placeholder="121.565">
+                        </div>
+                    </div>
+                    <div class="mb-3 text-end">
+                        <button type="button"
+                            id="btn-fill-location"
+                            class="btn btn-outline-primary btn-sm"
+                            data-error="{{ trans('geo_error') }}">
+                            {{ trans('btn_use_my_location') }}
+                        </button>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">{{ trans('btn_create_shop_account') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

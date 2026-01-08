@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h3 class="fw-bold">{{ trans('admin_overview_title') }}</h3>
+        <p class="text-muted mb-0">{{ trans('admin_overview_subtitle') }}</p>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="fs-4 fw-bold">{{ stats.total_orders }}</div>
+                <div class="text-muted">{{ trans('stat_total_orders') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="fs-4 fw-bold">{{ stats.total_users }}</div>
+                <div class="text-muted">{{ trans('stat_total_users') }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <div class="fs-4 fw-bold">{{ stats.total_shops }}</div>
+                <div class="text-muted">{{ trans('stat_total_shops') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">{{ trans('admin_shop_list') }}</h5>
+                <ul class="list-group list-group-flush">
+                    {% for shop in shops %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ shop.name }}</strong>
+                            <div class="text-muted small">{{ shop.address }}</div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-secondary">#{{ shop.id }}</span>
+                            <form method="POST" action="{{ url_for('delete_shop', shop_id=shop.id) }}" onsubmit="return confirm('{{ trans('confirm_delete_shop') }}');">
+                                <button class="btn btn-outline-danger btn-sm">{{ trans('btn_delete') }}</button>
+                            </form>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-muted">{{ trans('admin_no_shops') }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">{{ trans('admin_latest_orders') }}</h5>
+                {% for order in orders %}
+                <div class="border-bottom pb-2 mb-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <strong>#{{ order.id }} · {{ order.shop.name }}</strong>
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="badge bg-{% if order.status=='pending' %}warning{% elif order.status=='completed' %}success{% else %}secondary{% endif %}">{{ trans('status_' ~ order.status) }}</span>
+                            {% if order.status == 'pending' %}
+                            <form method="POST" action="{{ url_for('cancel_order', order_id=order.id) }}">
+                                <button class="btn btn-outline-danger btn-sm">{{ trans('btn_cancel_order') }}</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="small text-muted">{{ trans('field_name') }}: {{ order.user.name }} · {{ trans('shop_orders_pickup') }} {{ order.pickup_time.strftime('%Y-%m-%d %H:%M') }}</div>
+                </div>
+                {% else %}
+                <p class="text-muted">{{ trans('admin_no_orders') }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="mb-3">{{ trans('admin_users') }}</h5>
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>{{ trans('field_name') }}</th>
+                                <th>{{ trans('field_email') }}</th>
+                                <th>{{ trans('column_role') }}</th>
+                                <th>{{ trans('column_created') }}</th>
+                                <th>{{ trans('table_actions') }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ trans('role_' ~ user.role) }}</td>
+                                <td>{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                                <td>
+                                    {% if user.role != 'admin' %}
+                                    <form method="POST" action="{{ url_for('delete_user', user_id=user.id) }}" onsubmit="return confirm('{{ trans('confirm_delete_user') }}');">
+                                        <button class="btn btn-outline-danger btn-sm">{{ trans('btn_delete') }}</button>
+                                    </form>
+                                    {% else %}
+                                    <span class="text-muted">--</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">{{ trans('admin_no_users') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
